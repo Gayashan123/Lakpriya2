@@ -7,7 +7,7 @@ import Footer from '../../components/footer';
 import Image from 'next/image'; // Importing Next.js Image component
 
 // Use dynamic imports for Contact and About components
-const Contact = dynamic(() => import('../contactus'), {
+const Contact = dynamic(() => import('../contactus/page'), {
   loading: () => (
     <div className="text-center text-gray-500 py-12">
       <div className="animate-spin border-t-4 border-blue-600 border-solid w-12 h-12 rounded-full mx-auto mb-4"></div>
@@ -15,7 +15,7 @@ const Contact = dynamic(() => import('../contactus'), {
     </div>
   ),
 });
-const About = dynamic(() => import('../aboutus'), {
+const About = dynamic(() => import('../aboutus/page'), {
   loading: () => (
     <div className="text-center text-gray-500 py-12">
       <div className="animate-spin border-t-4 border-blue-600 border-solid w-12 h-12 rounded-full mx-auto mb-4"></div>

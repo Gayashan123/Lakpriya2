@@ -3,7 +3,7 @@
 import React from "react";
 
 
-import Index from "./pages/index";
+import Index from "./pages/index/page";
 
 
 
