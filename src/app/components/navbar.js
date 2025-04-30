@@ -34,7 +34,7 @@ export default function Navbar() {
             </li>
            
             <li>
-              <Link href="/pages/basic-rates" onClick={handleLinkClick} className={`cursor-pointer text-lg font-semibold transition duration-300 ${isActiveLink('/pages/basic-rates') ? 'blink' : 'hover:text-gray-300'}`}>
+              <Link href="/pages/basicrates" onClick={handleLinkClick} className={`cursor-pointer text-lg font-semibold transition duration-300 ${isActiveLink('/pages/basicrates') ? 'blink' : 'hover:text-gray-300'}`}>
                 Basic prices
               </Link>
             </li>
@@ -85,7 +85,7 @@ export default function Navbar() {
           </li>
           
           <li>
-            <Link href="/pages/basic-rates" onClick={handleLinkClick} className={`cursor-pointer text-lg font-semibold transition duration-300 ${isActiveLink('/pages/basic-rates') ? 'blink' : 'hover:text-gray-300'}`}>
+            <Link href="/pages/basicrates" onClick={handleLinkClick} className={`cursor-pointer text-lg font-semibold transition duration-300 ${isActiveLink('/pages/basicrates') ? 'blink' : 'hover:text-gray-300'}`}>
               Basic prices
             </Link>
           </li>
