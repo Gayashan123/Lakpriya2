@@ -6,6 +6,7 @@ export default function Labour() {
   const [labourData, setLabourData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasChanges, setHasChanges] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     loadLabourData();
@@ -108,7 +109,18 @@ export default function Labour() {
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
       <h1 className="text-4xl font-bold text-center my-4 bg-gray-800 text-white py-2 rounded-lg">Labour Table</h1>
-
+      
+      <div className="flex items-center mb-4">
+        <input
+          type="text"
+          placeholder="Search by description..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border p-2 w-full"
+        />
+        <button className="ml-2 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">Search</button>
+      </div>
+      
       <button onClick={addLabour} className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
         Add Labour
       </button>
@@ -137,7 +149,7 @@ export default function Labour() {
             </tr>
           </thead>
           <tbody>
-            {labourData.map((labour) => (
+            {labourData.filter(labour => labour.description.toLowerCase().includes(searchTerm.toLowerCase())).map((labour) => (
               <tr key={labour._id} className="border-b text-center hover:bg-gray-200">
                 <td className="p-3">{labour.Item_No}</td>
                 <td className="p-3">{labour.Code_no}</td>

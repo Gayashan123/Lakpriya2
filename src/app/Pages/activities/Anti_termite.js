@@ -141,7 +141,7 @@ export default function EarthWorkSupport() {
   // Provided data
   const exampleData = [
     {
-      title: "03.A.01 Anti-Termite treatment on excavated foundation and compacted soil under floors.",
+      title: "03.A.01 Anti-Termite treatment on excavated foundation and compacted soil under floors. (Analyse for 1 Sq)",
       data: [
         { no: '1', description: 'D. D. T. Powder', ref: 'M-038', unit: 'Lbs', quantity: 16, rate: 0, amount: 0 },  // 400
         { no: '1.0', description: 'Water', ref: 'M-157', unit: 'Gal', quantity: 20, rate: 0, amount: 0 },  // 6

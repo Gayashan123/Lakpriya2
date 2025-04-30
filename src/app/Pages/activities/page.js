@@ -1,91 +1,159 @@
+// pages/activities/index.js
+
 'use client';
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import Navbar from '../../components/navbar';
-import Footer from '../../components/footer';
+import React, { useState, useEffect } from 'react';
+import Navbar from "../../components/navbar";
+import Footer from "../../components/footer";
+import Link from "next/link";
 
-const sections = [
-  { name: 'Site Preparation & Excavation', link: '/pages/act/site-prepapartion' },
-  { name: 'Earth Work Support and Filling', link: '/pages/act/Earth-work' },
-  { name: 'Anti Termite Treatment & DPC', link:  '/pages/act/Anti-termite'},
-  { name: 'Random Rubble Masonry Work', link: '/pages/act/Random_rubble' },
-  { name: 'Concrete Work', link: '/pages/act/Concrete' },
-  { name: 'Formwork', link:'/pages/act/Formwork' },
-  { name: 'Reinforcement', link: '/pages/act/Reinforcement' },
-  { name: 'Block Work', link: '/pages/act/Block-work' },
-  { name: 'Brick Work', link: '/pages/act/Brick-work' },
-  { name: 'Roof', link: '/pages/act/Roof_covering' },
-  { name: 'Doors and Windows', link: '/pages/act/earth-work' },
-  { name: 'Plumbing & Drainage', link: '/pages/act/PlumbingandDra' },
-  { name: 'Plastering', link: '/pages/act/Plastering' },
-  { name: 'Tiling', link: '/pages/act/Tiling' },
-  { name: 'Ceiling', link: '/pages/act/Ceiling' },
-  { name: 'Painting', link: '/pages/act/Painting' },
-];
+export default function ActivityTracker() {
+  const [activityData, setActivityData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [newActivity, setNewActivity] = useState("");
+  const [editingId, setEditingId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
-export default function Page() {
-  const [activeSection, setActiveSection] = useState('');
+  useEffect(() => {
+    loadActivityData();
+  }, []);
 
-  // Handle section selection
-  const handleSectionClick = (sectionName) => {
-    setActiveSection(sectionName);
+  const loadActivityData = async () => {
+    try {
+      const response = await fetch("/api/activity");
+      const result = await response.json();
+      if (response.ok) {
+        setActivityData(result);
+      } else {
+        setActivityData([]);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setActivityData([]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  const addActivity = async () => {
+    if (!newActivity.trim()) return;
+
+    const newAct = { name: newActivity };
+
+    try {
+      const response = await fetch("/api/activity", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newAct),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setActivityData([...activityData, result.newActivity]);
+        setNewActivity("");
+      } else {
+        alert("Error adding activity: " + result.message);
+      }
+    } catch (error) {
+      console.error("Error adding activity:", error);
+      alert("Failed to add activity");
+    }
+  };
+
+  const updateActivity = async (id, name) => {
+    try {
+      const response = await fetch(`/api/activity`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, name }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setActivityData((prev) =>
+          prev.map((act) => (act._id === id ? { ...act, name: result.updatedActivity.name } : act))
+        );
+        setEditingId(null);
+      } else {
+        alert("Error updating activity: " + result.message);
+      }
+    } catch (error) {
+      console.error("Error updating activity:", error);
+      alert("Failed to update activity");
+    }
+  };
+
+  const deleteActivity = async (id) => {
+    if (!confirm("Are you sure you want to delete this activity?")) return;
+
+    try {
+      const response = await fetch(`/api/activity`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setActivityData((prev) => prev.filter((act) => act._id !== id));
+      } else {
+        alert("Error deleting activity: " + result.message);
+      }
+    } catch (error) {
+      console.error("Error deleting activity:", error);
+      alert("Failed to delete activity");
+    }
+  };
+
+  const filteredSections = activityData.filter((section) =>
+    section.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div className="bg-gray-50 min-h-screen flex flex-col">
-      {/* Navbar */}
+    <div className="flex flex-col min-h-screen bg-gray-50">
       <Navbar />
+      <div className="flex-grow">
+        <div className="container mx-auto px-6 py-8">
+          <div className="flex gap-6 mb-8 justify-center">
+            <input
+              type="text"
+              value={newActivity}
+              onChange={(e) => setNewActivity(e.target.value)}
+              className="border-2 border-gray-300 p-4 rounded-lg w-80 text-lg"
+              placeholder="Enter activity name"
+            />
+            <button
+              onClick={addActivity}
+              className="bg-green-600 text-white px-8 py-4 rounded-lg"
+            >
+              Add Activity
+            </button>
+          </div>
 
-      {/* Back Button (Appears when a section is selected) */}
-      {activeSection && (
-        <div className="flex justify-start px-6 py-4">
-          <button 
-            className="px-6 py-3 bg-gray-700 text-white font-bold rounded-lg shadow-md hover:bg-gray-800 focus:outline-none transition duration-300 ease-in-out"
-            onClick={() => setActiveSection('')}
-          >
-            🔙 Back
-          </button>
-        </div>
-      )}
+          <div className="w-full max-w-md mb-8">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search activities..."
+              className="w-full p-3 border border-gray-300 rounded-lg"
+            />
+          </div>
 
-      {/* Main Section */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-8 space-y-6">
-        <h1 className="text-4xl font-extrabold text-gray-800 mb-6 text-center max-w-2xl">
-          Welcome to Our Construction Activities Overview!
-        </h1>
-        <p className="text-lg text-gray-600 mb-8 text-center max-w-3xl">
-          Explore the different construction stages involved in your project. Select any of the activities below to learn more details. Let's build your dream project together with professionalism and care!
-        </p>
-
-        {/* Button Section */}
-        {activeSection === '' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 w-full max-w-6xl">
-            {sections.map((section, index) => (
-              <Link 
-                key={index} 
-                href={section.link} 
-                prefetch={true} // Ensuring that the page is prefetched for better speed
-                passHref
-              >
-                <button 
-                  className="bg-white text-gray-800 font-semibold py-4 px-6 rounded-lg shadow-xl transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:bg-gray-100 focus:outline-none"
-                  onClick={() => handleSectionClick(section.name)} // Using handler for better control
-                >
+            {filteredSections.map((section, index) => (
+              <Link key={index} href={`/pages/activities/${section._id}`} passHref>
+                <button className="bg-white text-gray-800 font-semibold py-4 px-6 rounded-lg shadow-xl">
                   {section.name}
                 </button>
               </Link>
             ))}
           </div>
-        ) : (
-          <div className="text-center text-gray-700 text-xl font-semibold max-w-md mx-auto">
-            <p>Details for <span className="font-bold text-blue-600">{activeSection}</span> will be displayed here soon.</p>
-            <p className="mt-4 text-gray-500">Stay tuned for more detailed insights on each construction activity.</p>
-          </div>
-        )}
+        </div>
       </div>
-
-      {/* Footer */}
       <Footer />
     </div>
   );

@@ -1,14 +1,25 @@
+'use client';
+
 import React, { useState, useEffect } from "react";
 
 export default function Plant() {
   const [plantData, setPlantData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [hasChanges, setHasChanges] = useState(false);
 
-  // Load data from API when the component mounts
   useEffect(() => {
     loadPlantData();
   }, []);
+
+  useEffect(() => {
+    setFilteredData(
+      plantData.filter((plant) =>
+        plant.description.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    );
+  }, [searchQuery, plantData]);
 
   const loadPlantData = async () => {
     setIsLoading(true);
@@ -17,9 +28,11 @@ export default function Plant() {
       if (!response.ok) throw new Error("Failed to fetch data");
       const result = await response.json();
       setPlantData(result);
+      setFilteredData(result);
     } catch (error) {
       console.error("Error fetching data:", error);
       setPlantData([]);
+      setFilteredData([]);
     } finally {
       setIsLoading(false);
     }
@@ -102,9 +115,18 @@ export default function Plant() {
     <div className="p-8 bg-gray-100 min-h-screen">
       <h1 className="text-4xl font-bold text-center my-4 bg-gray-800 text-white py-2 rounded-lg">Plant Table</h1>
 
-      <button onClick={addPlant} className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
-        Add Plant
-      </button>
+      <div className="mb-4 flex items-center">
+        <input
+          type="text"
+          placeholder="Search by description..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="border p-2 rounded-lg w-1/3 mr-4"
+        />
+        <button onClick={addPlant} className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
+          Add Plant
+        </button>
+      </div>
 
       {hasChanges && (
         <button onClick={saveData} className="ml-4 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700">
@@ -130,7 +152,7 @@ export default function Plant() {
             </tr>
           </thead>
           <tbody>
-            {plantData.map((plant) => (
+            {filteredData.map((plant) => (
               <tr key={plant._id} className="border-b text-center hover:bg-gray-200">
                 <td className="p-3">{plant.Item_No}</td>
                 <td className="p-3">{plant.Code_no}</td>

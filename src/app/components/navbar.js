@@ -21,7 +21,7 @@ export default function Navbar() {
       <div className="container mx-auto flex justify-between items-center py-4 px-8">
         {/* Logo or brand name */}
         <div className="text-2xl font-extrabold cursor-pointer">
-          <span className="text-white">MyBrand</span>
+          <span className="text-white"></span>
         </div>
 
         {/* Desktop Navigation */}
@@ -32,14 +32,10 @@ export default function Navbar() {
                 Home
               </Link>
             </li>
-            <li>
-              <Link href="/pages/basic-prices" onClick={handleLinkClick} className={`cursor-pointer text-lg font-semibold transition duration-300 ${isActiveLink('/pages/basic-prices') ? 'blink' : 'hover:text-gray-300'}`}>
-                Basic Prices
-              </Link>
-            </li>
+           
             <li>
               <Link href="/pages/basic-rates" onClick={handleLinkClick} className={`cursor-pointer text-lg font-semibold transition duration-300 ${isActiveLink('/pages/basic-rates') ? 'blink' : 'hover:text-gray-300'}`}>
-                Basic Rates
+                Basic prices
               </Link>
             </li>
             <li>
@@ -87,14 +83,10 @@ export default function Navbar() {
               Home
             </Link>
           </li>
-          <li>
-            <Link href="/pages/basic-prices" onClick={handleLinkClick} className={`cursor-pointer text-lg font-semibold transition duration-300 ${isActiveLink('/pages/basic-prices') ? 'blink' : 'hover:text-gray-300'}`}>
-              Basic Prices
-            </Link>
-          </li>
+          
           <li>
             <Link href="/pages/basic-rates" onClick={handleLinkClick} className={`cursor-pointer text-lg font-semibold transition duration-300 ${isActiveLink('/pages/basic-rates') ? 'blink' : 'hover:text-gray-300'}`}>
-              Basic Rates
+              Basic prices
             </Link>
           </li>
           <li>

@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import Link from 'next/link';
 
@@ -91,6 +93,7 @@ export default function Footer() {
             </a>
           </div>
         </div>
+        0
       </div>
 
       {/* Footer Copyright */}

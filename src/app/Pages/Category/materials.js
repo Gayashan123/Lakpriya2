@@ -6,6 +6,7 @@ export default function Materials() {
   const [materialsData, setMaterialsData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasChanges, setHasChanges] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     loadMaterialsData();
@@ -36,7 +37,7 @@ export default function Materials() {
       Item_No: newItemNo,
       description: "",
       Code_no: newCodeNo,
-      unit: "Day", // Default unit can be something like 'Day', but the user can change it
+      unit: "Day",
       price: "",
       isNew: true,
     };
@@ -105,19 +106,33 @@ export default function Materials() {
     setHasChanges(true);
   };
 
+  const filteredMaterials = materialsData.filter((material) =>
+    material.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    material.Code_no.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    material.unit.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
       <h1 className="text-4xl font-bold text-center my-4 bg-gray-800 text-white py-2 rounded-lg">Materials Table</h1>
 
-      <button onClick={addMaterial} className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
-        Add Material
-      </button>
-
-      {hasChanges && (
-        <button onClick={saveData} className="ml-4 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700">
-          Save Changes
+      <div className="flex gap-4 mb-4">
+        <button onClick={addMaterial} className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
+          Add Material
         </button>
-      )}
+        <input
+          type="text"
+          placeholder="Search materials..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="border p-2 rounded w-full"
+        />
+        {hasChanges && (
+          <button onClick={saveData} className="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700">
+            Save Changes
+          </button>
+        )}
+      </div>
 
       {isLoading ? (
         <div className="text-center">
@@ -137,7 +152,7 @@ export default function Materials() {
             </tr>
           </thead>
           <tbody>
-            {materialsData.map((material) => (
+            {filteredMaterials.map((material) => (
               <tr key={material._id} className="border-b text-center hover:bg-gray-200">
                 <td className="p-3">{material.Item_No}</td>
                 <td className="p-3">{material.Code_no}</td>
