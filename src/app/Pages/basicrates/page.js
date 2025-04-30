@@ -3,9 +3,9 @@
 import React, { useState } from 'react';
 import Navbar from '../../components/navbar';
 import Footer from '../../components/footer';
-import Labour from '../category/labour';
-import Plant from '../category/plant';
-import Materials from '../category/materials';
+import Labour from '../Category/Labour';
+import Plant from '../Category/Plant';
+import Materials from '../Category/Materials';
 
 export default function Page() {
   const [activeTable, setActiveTable] = useState('');

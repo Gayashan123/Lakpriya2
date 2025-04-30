@@ -4,7 +4,7 @@ import React from "react";
 
 import Navbar from './components/navbar'
 import Footer from "./components/footer";
-import Index from "./pages/index/page";
+import Index from "./pages/Index/page";
 
 
 
